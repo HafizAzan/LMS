@@ -34,9 +34,21 @@ const createQuiz = async (req, res) => {
       });
     }
 
+    const lessonId = lesson || null;
+    const existing = await Quiz.findOne({
+      course,
+      lesson: lessonId,
+    });
+
+    if (existing) {
+      existing.questions = questions;
+      await existing.save();
+      return res.status(200).json(existing);
+    }
+
     const quiz = await Quiz.create({
       course,
-      lesson: lesson || null,
+      lesson: lessonId,
       questions,
     });
 
@@ -62,9 +74,14 @@ const getQuizByCourse = async (req, res) => {
     const filter = { course: courseId };
     if (lessonId) {
       filter.lesson = lessonId;
+    } else {
+      filter.lesson = null;
     }
 
-    const quizzes = await Quiz.find(filter).populate('lesson', 'title order');
+    let quizzes = await Quiz.find(filter).populate('lesson', 'title order');
+    if (!lessonId && quizzes.length === 0) {
+      quizzes = await Quiz.find({ course: courseId }).populate('lesson', 'title order');
+    }
 
     const isInstructor = req.user?.role === 'instructor';
     const payload = isInstructor ? quizzes : quizzes.map(toStudentQuiz);

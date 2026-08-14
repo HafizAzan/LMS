@@ -1,15 +1,11 @@
 const jwt = require('jsonwebtoken');
 const User = require('../models/User');
+const { readAuthToken } = require('../utils/cookies');
 
 const protect = async (req, res, next) => {
   try {
-    const authHeader = req.headers.authorization;
+    const token = readAuthToken(req);
 
-    if (!authHeader || !authHeader.startsWith('Bearer ')) {
-      return res.status(401).json({ message: 'Not authorized, no token' });
-    }
-
-    const token = authHeader.split(' ')[1];
     if (!token) {
       return res.status(401).json({ message: 'Not authorized, no token' });
     }
@@ -19,6 +15,14 @@ const protect = async (req, res, next) => {
 
     if (!user) {
       return res.status(401).json({ message: 'Not authorized, user not found' });
+    }
+
+    if (user.isEmailVerified === false) {
+      return res.status(403).json({
+        message: 'Please verify your email to continue',
+        code: 'EMAIL_NOT_VERIFIED',
+        email: user.email,
+      });
     }
 
     req.user = user;

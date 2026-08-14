@@ -79,8 +79,8 @@ const drawCertificate = (doc, { userName, courseTitle, completionDate }) => {
 
   doc
     .fontSize(12)
-    .fillColor('#666')
-    .text('Online Learning Platform', 70, pageHeight - 100, {
+    .fillColor('#4343d5')
+    .text('LearnHub', 70, pageHeight - 100, {
       align: 'center',
       width: pageWidth - 140,
     });

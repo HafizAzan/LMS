@@ -1,5 +1,6 @@
 const Course = require('../models/Course');
 const Progress = require('../models/Progress');
+const Payment = require('../models/Payment');
 const Quiz = require('../models/Quiz');
 const QuizAttempt = require('../models/QuizAttempt');
 
@@ -121,4 +122,37 @@ const getCourseAnalytics = async (req, res) => {
   }
 };
 
-module.exports = { getCourseAnalytics };
+const getOverview = async (req, res) => {
+  try {
+    const courses = await Course.find({ instructor: req.user._id });
+    const courseIds = courses.map((course) => course._id);
+    const studentIds = new Set();
+    let ratingsWeighted = 0;
+    let ratingsCount = 0;
+
+    courses.forEach((course) => {
+      (course.enrolledStudents || []).forEach((id) => studentIds.add(id.toString()));
+      ratingsWeighted += (course.ratingsAverage || 0) * (course.ratingsCount || 0);
+      ratingsCount += course.ratingsCount || 0;
+    });
+
+    const payments = courseIds.length
+      ? await Payment.find({ course: { $in: courseIds }, status: 'paid' })
+      : [];
+    const totalRevenue =
+      payments.reduce((sum, payment) => sum + (payment.amount || 0), 0) / 100;
+
+    return res.status(200).json({
+      totalStudents: studentIds.size,
+      totalCourses: courses.length,
+      drafts: courses.filter((course) => course.isPublished === false).length,
+      averageRating: ratingsCount ? round1(ratingsWeighted / ratingsCount) : 0,
+      ratingsCount,
+      totalRevenue: Math.round(totalRevenue * 100) / 100,
+    });
+  } catch (error) {
+    return res.status(500).json({ message: error.message });
+  }
+};
+
+module.exports = { getCourseAnalytics, getOverview };

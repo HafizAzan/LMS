@@ -28,6 +28,28 @@ const userSchema = new mongoose.Schema({
     type: String,
     default: '',
   },
+  isEmailVerified: {
+    type: Boolean,
+    default: true,
+  },
+  otpHash: {
+    type: String,
+    select: false,
+  },
+  otpExpiresAt: {
+    type: Date,
+    select: false,
+  },
+  otpPurpose: {
+    type: String,
+    enum: ['verify', 'reset'],
+    select: false,
+  },
+  otpAttempts: {
+    type: Number,
+    default: 0,
+    select: false,
+  },
   enrolledCourses: [
     {
       type: mongoose.Schema.Types.ObjectId,

@@ -1,22 +1,8 @@
-const nodemailer = require('nodemailer');
 const Progress = require('../models/Progress');
+const { isMailConfigured, sendMail } = require('../utils/mail');
 
 const SEVEN_DAYS_MS = 7 * 24 * 60 * 60 * 1000;
 const CHECK_INTERVAL_MS = 6 * 60 * 60 * 1000;
-
-const isMailConfigured = () =>
-  Boolean(process.env.SMTP_HOST && process.env.SMTP_USER && process.env.SMTP_PASS);
-
-const createTransport = () =>
-  nodemailer.createTransport({
-    host: process.env.SMTP_HOST,
-    port: Number(process.env.SMTP_PORT) || 587,
-    secure: Number(process.env.SMTP_PORT) === 465,
-    auth: {
-      user: process.env.SMTP_USER,
-      pass: process.env.SMTP_PASS,
-    },
-  });
 
 const sendInactivityReminders = async () => {
   const cutoff = new Date(Date.now() - SEVEN_DAYS_MS);
@@ -44,8 +30,6 @@ const sendInactivityReminders = async () => {
     return { scanned: stale.length, sent: 0 };
   }
 
-  const transporter = createTransport();
-  const from = process.env.SMTP_FROM || process.env.SMTP_USER;
   const clientUrl = (process.env.CLIENT_URL || 'http://localhost:5173')
     .split(',')[0]
     .trim();
@@ -60,8 +44,7 @@ const sendInactivityReminders = async () => {
     }
 
     const courseId = progress.course._id;
-    await transporter.sendMail({
-      from,
+    await sendMail({
       to: email,
       subject: `Continue learning: ${courseTitle}`,
       text: `Hi ${progress.user.name || 'there'},\n\nYou have not accessed "${courseTitle}" in 7 days. Pick up where you left off:\n${clientUrl}/courses/${courseId}/learn\n\n— LMS`,

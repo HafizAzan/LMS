@@ -24,6 +24,7 @@ const createCourse = async (req, res) => {
       difficulty,
       duration,
       instructor: req.user._id,
+      isPublished: false,
     });
 
     return res.status(201).json(course);
@@ -57,10 +58,28 @@ const getAllCourses = async (req, res) => {
       filter.instructor = req.query.instructor;
     }
 
+    if (req.query.published === 'false') {
+      filter.isPublished = false;
+    } else if (req.query.published !== 'all') {
+      filter.isPublished = { $ne: false };
+    }
+
+    const sortKey = req.query.sort;
+    const sort =
+      sortKey === 'rating'
+        ? { ratingsAverage: -1, ratingsCount: -1 }
+        : sortKey === 'price_asc'
+          ? { price: 1 }
+          : sortKey === 'price_desc'
+            ? { price: -1 }
+            : sortKey === 'popular'
+              ? { ratingsCount: -1, enrolledStudents: -1 }
+              : { createdAt: -1 };
+
     const [courses, total] = await Promise.all([
       Course.find(filter)
         .populate('instructor', 'name email avatar')
-        .sort({ createdAt: -1 })
+        .sort(sort)
         .skip(skip)
         .limit(limit),
       Course.countDocuments(filter),
@@ -120,6 +139,7 @@ const updateCourse = async (req, res) => {
       'category',
       'difficulty',
       'duration',
+      'isPublished',
     ];
 
     allowedFields.forEach((field) => {

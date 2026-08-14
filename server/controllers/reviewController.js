@@ -43,17 +43,6 @@ const createReview = async (req, res) => {
       return res.status(404).json({ message: 'Course not found' });
     }
 
-    const existing = await Review.findOne({
-      user: req.user._id,
-      course: courseDoc._id,
-    });
-
-    if (existing) {
-      return res.status(400).json({
-        message: 'You have already reviewed this course',
-      });
-    }
-
     const review = await Review.create({
       user: req.user._id,
       course: courseDoc._id,
@@ -66,12 +55,6 @@ const createReview = async (req, res) => {
     const populated = await review.populate('user', 'name avatar');
     return res.status(201).json(populated);
   } catch (error) {
-    if (error.code === 11000) {
-      return res.status(400).json({
-        message: 'You have already reviewed this course',
-      });
-    }
-
     if (error.name === 'ValidationError' || error.name === 'CastError') {
       return res.status(400).json({ message: error.message });
     }

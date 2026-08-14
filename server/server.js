@@ -3,6 +3,7 @@ require('dotenv').config();
 const path = require('path');
 const express = require('express');
 const cors = require('cors');
+const cookieParser = require('cookie-parser');
 
 const connectDB = require('./config/db');
 const { corsOptions, getAllowedOrigins } = require('./config/cors');
@@ -28,6 +29,7 @@ const PORT = process.env.PORT || 5000;
 
 app.set('trust proxy', 1);
 app.use(cors(corsOptions));
+app.use(cookieParser());
 app.post(
   '/api/payments/webhook',
   express.raw({ type: 'application/json' }),
@@ -55,6 +57,8 @@ app.use(errorHandler);
 const startServer = async () => {
   try {
     await connectDB();
+    const Review = require('./models/Review');
+    await Review.syncIndexes();
     app.listen(PORT, '0.0.0.0', () => {
       const origins = getAllowedOrigins();
       console.log(

@@ -64,6 +64,10 @@ const courseSchema = new mongoose.Schema({
       ref: 'User',
     },
   ],
+  isPublished: {
+    type: Boolean,
+    default: true,
+  },
   createdAt: {
     type: Date,
     default: Date.now,
