@@ -64,7 +64,7 @@ export default function VerifyEmail() {
   if (!email) {
     return (
       <AuthScreen>
-        <div className="w-full max-w-sm space-y-md">
+        <div className="w-full space-y-md">
           <Heading size="headline">Check your email</Heading>
           <Text muted>Start from sign up so we know where to send the code.</Text>
           <Button to="/register">Back to sign up</Button>
@@ -75,7 +75,7 @@ export default function VerifyEmail() {
 
   return (
     <AuthScreen>
-      <form onSubmit={submit} className="w-full max-w-sm space-y-5">
+      <form onSubmit={submit} className="w-full space-y-5">
         <div className="space-y-sm">
           <Heading size="headline">Verify your email</Heading>
           <Text muted>We sent a 6-digit code to {masked}. It expires in 1 minute.</Text>

@@ -62,7 +62,7 @@ export default function ResetPassword() {
   if (!email) {
     return (
       <AuthScreen>
-        <div className="w-full max-w-sm space-y-md">
+        <div className="w-full space-y-md">
           <Heading size="headline">Reset password</Heading>
           <Text muted>Start from the forgot password page so we can email you a code.</Text>
           <Button to="/forgot-password">Forgot password</Button>
@@ -73,7 +73,7 @@ export default function ResetPassword() {
 
   return (
     <AuthScreen>
-      <form onSubmit={submit} className="w-full max-w-sm space-y-5">
+      <form onSubmit={submit} className="w-full space-y-5">
         <div className="space-y-sm">
           <Heading size="headline">Reset password</Heading>
           <Text muted>Enter the code sent to {email} and choose a new password.</Text>

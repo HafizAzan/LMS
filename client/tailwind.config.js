@@ -57,6 +57,7 @@ export default {
         lg: '0.5rem',
         xl: '0.75rem',
         '2xl': '1rem',
+        '3xl': '1.5rem',
       },
       spacing: {
         xs: '4px',
@@ -69,10 +70,37 @@ export default {
         gutter: '24px',
       },
       boxShadow: {
-        lift: '0 4px 20px rgba(93, 95, 239, 0.08)',
+        lift: '0 18px 40px -18px rgba(67, 67, 213, 0.28), 0 8px 20px -10px rgba(18, 28, 40, 0.1)',
+        soft: '0 1px 2px rgba(18, 28, 40, 0.04), 0 8px 24px -12px rgba(18, 28, 40, 0.08)',
+        glow: '0 0 0 4px rgba(67, 67, 213, 0.12)',
       },
       transitionDuration: {
         DEFAULT: '200ms',
+      },
+      transitionTimingFunction: {
+        premium: 'cubic-bezier(0.22, 1, 0.36, 1)',
+      },
+      keyframes: {
+        'fade-up': {
+          from: { opacity: '0', transform: 'translateY(14px)' },
+          to: { opacity: '1', transform: 'none' },
+        },
+        'scale-in': {
+          from: { opacity: '0', transform: 'translateY(8px) scale(0.97)' },
+          to: { opacity: '1', transform: 'none' },
+        },
+        shimmer: {
+          '100%': { transform: 'translateX(100%)' },
+        },
+        float: {
+          '0%, 100%': { transform: 'translateY(0)' },
+          '50%': { transform: 'translateY(-10px)' },
+        },
+      },
+      animation: {
+        'fade-up': 'fade-up 0.5s cubic-bezier(0.22, 1, 0.36, 1) both',
+        'scale-in': 'scale-in 0.22s cubic-bezier(0.22, 1, 0.36, 1) both',
+        float: 'float 7s ease-in-out infinite',
       },
     },
   },

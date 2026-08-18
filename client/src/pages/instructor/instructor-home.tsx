@@ -50,24 +50,28 @@ export default function InstructorHome() {
           <RefreshCw size={16} /> Refresh Data
         </Button>
       </div>
-      <div className="grid grid-cols-1 gap-gutter md:grid-cols-2 lg:grid-cols-4">
-        <Card hover>
-          <div className="flex items-start justify-between">
+      <div className="grid grid-cols-1 gap-gutter stagger-grid sm:grid-cols-2 xl:grid-cols-4">
+        <Card className="min-w-0">
+          <div className="flex items-start justify-between gap-sm">
             <Text muted size="sm">
               Total Students
             </Text>
-            <Users size={18} className="text-primary" />
+            <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-primary-fixed text-primary">
+              <Users size={18} />
+            </span>
           </div>
           <Heading size="headline" className="mt-sm">
             {overview?.totalStudents ?? 0}
           </Heading>
         </Card>
-        <Card hover>
-          <div className="flex items-start justify-between">
+        <Card className="min-w-0">
+          <div className="flex items-start justify-between gap-sm">
             <Text muted size="sm">
               Total Courses
             </Text>
-            <BookOpen size={18} className="text-primary" />
+            <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-primary-fixed text-primary">
+              <BookOpen size={18} />
+            </span>
           </div>
           <Heading size="headline" className="mt-sm">
             {overview?.totalCourses ?? 0}
@@ -76,24 +80,28 @@ export default function InstructorHome() {
             {overview?.drafts || 0} drafts pending
           </Text>
         </Card>
-        <Card hover>
-          <div className="flex items-start justify-between">
+        <Card className="min-w-0">
+          <div className="flex items-start justify-between gap-sm">
             <Text muted size="sm">
               Average Rating
             </Text>
-            <Star size={18} className="text-secondary" />
+            <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-secondary-fixed text-on-secondary-container">
+              <Star size={18} />
+            </span>
           </div>
           <Heading size="headline" className="mt-sm">
             {overview?.averageRating ?? 0}{' '}
             <span className="text-lg font-normal text-on-surface-variant">/ 5.0</span>
           </Heading>
         </Card>
-        <Card hover>
-          <div className="flex items-start justify-between">
+        <Card className="min-w-0">
+          <div className="flex items-start justify-between gap-sm">
             <Text muted size="sm">
               Total Revenue
             </Text>
-            <Wallet size={18} className="text-primary" />
+            <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-primary-fixed text-primary">
+              <Wallet size={18} />
+            </span>
           </div>
           <Heading size="headline" className="mt-sm">
             ${(overview?.totalRevenue || 0).toFixed(2)}

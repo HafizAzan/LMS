@@ -87,12 +87,16 @@ export default function CreateCourse() {
   return (
     <div className="mx-auto max-w-2xl space-y-xl">
       <Heading size="headline">Create Course</Heading>
-      <ol className="flex flex-wrap gap-sm">
+      <ol className="grid grid-cols-2 gap-sm sm:grid-cols-4">
         {steps.map((label, i) => (
           <li
             key={label}
-            className={`rounded-full px-sm py-xs text-caption ${
-              i === step ? 'bg-primary text-on-primary' : 'bg-surface-container text-on-surface-variant'
+            className={`rounded-xl px-sm py-sm text-center text-caption transition-colors duration-200 ${
+              i === step
+                ? 'bg-primary text-on-primary shadow-soft'
+                : i < step
+                  ? 'bg-primary-fixed text-primary'
+                  : 'bg-surface-container text-on-surface-variant'
             }`}
           >
             {i + 1}. {label}
@@ -116,26 +120,28 @@ export default function CreateCourse() {
             onChange={(e) => setForm({ ...form, description: e.target.value })}
             required
           />
-          <Select
-            label="Category"
-            value={form.category}
-            onChange={(value) => setForm({ ...form, category: value })}
-            options={[
-              { value: 'design', label: 'Design' },
-              { value: 'development', label: 'Development' },
-              { value: 'business', label: 'Business' },
-            ]}
-          />
-          <Select
-            label="Difficulty"
-            value={form.difficulty}
-            onChange={(value) => setForm({ ...form, difficulty: value })}
-            options={[
-              { value: 'beginner', label: 'Beginner' },
-              { value: 'intermediate', label: 'Intermediate' },
-              { value: 'advanced', label: 'Advanced' },
-            ]}
-          />
+          <div className="grid gap-lg sm:grid-cols-2">
+            <Select
+              label="Category"
+              value={form.category}
+              onChange={(value) => setForm({ ...form, category: value })}
+              options={[
+                { value: 'design', label: 'Design' },
+                { value: 'development', label: 'Development' },
+                { value: 'business', label: 'Business' },
+              ]}
+            />
+            <Select
+              label="Difficulty"
+              value={form.difficulty}
+              onChange={(value) => setForm({ ...form, difficulty: value })}
+              options={[
+                { value: 'beginner', label: 'Beginner' },
+                { value: 'intermediate', label: 'Intermediate' },
+                { value: 'advanced', label: 'Advanced' },
+              ]}
+            />
+          </div>
           <FileInput
             label="Thumbnail"
             accept="image/*"
@@ -225,21 +231,23 @@ export default function CreateCourse() {
 
       {step === 2 ? (
         <div className="space-y-lg">
-          <Input
-            label="Price (USD, 0 = free)"
-            type="number"
-            min={0}
-            step="0.01"
-            value={form.price}
-            onChange={(e) => setForm({ ...form, price: Number(e.target.value) })}
-          />
-          <Input
-            label="Duration (hours)"
-            type="number"
-            min={0}
-            value={form.duration}
-            onChange={(e) => setForm({ ...form, duration: Number(e.target.value) })}
-          />
+          <div className="grid gap-lg sm:grid-cols-2">
+            <Input
+              label="Price (USD, 0 = free)"
+              type="number"
+              min={0}
+              step="0.01"
+              value={form.price}
+              onChange={(e) => setForm({ ...form, price: Number(e.target.value) })}
+            />
+            <Input
+              label="Duration (hours)"
+              type="number"
+              min={0}
+              value={form.duration}
+              onChange={(e) => setForm({ ...form, duration: Number(e.target.value) })}
+            />
+          </div>
           <Text muted>Paid courses checkout through Stripe.</Text>
           <div className="flex gap-sm">
             <Button variant="secondary" onClick={() => setStep(1)}>

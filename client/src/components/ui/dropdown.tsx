@@ -57,7 +57,7 @@ export default function Dropdown({
           id={menuId}
           role="menu"
           className={cn(
-            'absolute top-full z-50 mt-base overflow-hidden rounded-xl border border-outline-variant bg-surface-container-lowest py-xs shadow-lift',
+            'absolute top-full z-50 mt-base overflow-hidden rounded-2xl border border-outline-variant/80 bg-surface-container-lowest py-xs shadow-lift animate-scale-in',
             width,
             align === 'right' ? 'right-0' : 'left-0',
           )}

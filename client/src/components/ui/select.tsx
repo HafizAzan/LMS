@@ -1,5 +1,6 @@
 import { Check, ChevronDown } from 'lucide-react';
-import { useEffect, useId, useRef, useState, type ReactNode } from 'react';
+import { useEffect, useId, useLayoutEffect, useRef, useState, type ReactNode } from 'react';
+import { createPortal } from 'react-dom';
 import { cn } from '../../lib/cn';
 import Label from './label';
 import Text from './text';
@@ -33,14 +34,18 @@ export default function Select({
   icon,
 }: SelectProps) {
   const [open, setOpen] = useState(false);
-  const ref = useRef<HTMLDivElement>(null);
+  const wrapRef = useRef<HTMLDivElement>(null);
+  const buttonRef = useRef<HTMLButtonElement>(null);
+  const menuRef = useRef<HTMLDivElement>(null);
   const menuId = useId();
   const items = placeholder ? [{ value: '', label: placeholder }, ...options] : options;
   const selected = items.find((item) => item.value === value) || items[0];
 
   useEffect(() => {
     const onPointer = (event: MouseEvent) => {
-      if (!ref.current?.contains(event.target as Node)) setOpen(false);
+      const target = event.target as Node;
+      if (wrapRef.current?.contains(target) || menuRef.current?.contains(target)) return;
+      setOpen(false);
     };
     const onKey = (event: KeyboardEvent) => {
       if (event.key === 'Escape') setOpen(false);
@@ -53,12 +58,52 @@ export default function Select({
     };
   }, []);
 
+  useLayoutEffect(() => {
+    if (!open) return;
+
+    const place = () => {
+      const trigger = buttonRef.current;
+      const menu = menuRef.current;
+      if (!trigger || !menu) return;
+
+      const rect = trigger.getBoundingClientRect();
+      const gap = 8;
+      const maxHeight = Math.min(288, window.innerHeight - 16);
+      const spaceBelow = window.innerHeight - rect.bottom - gap;
+      const spaceAbove = rect.top - gap;
+      const openUp = spaceBelow < 160 && spaceAbove > spaceBelow;
+
+      menu.style.position = 'fixed';
+      menu.style.left = `${rect.left}px`;
+      menu.style.width = `${Math.max(rect.width, 180)}px`;
+      menu.style.zIndex = '80';
+      menu.style.maxHeight = `${openUp ? Math.min(maxHeight, spaceAbove) : Math.min(maxHeight, spaceBelow)}px`;
+
+      if (openUp) {
+        menu.style.top = 'auto';
+        menu.style.bottom = `${window.innerHeight - rect.top + gap}px`;
+      } else {
+        menu.style.bottom = 'auto';
+        menu.style.top = `${rect.bottom + gap}px`;
+      }
+    };
+
+    place();
+    window.addEventListener('resize', place);
+    window.addEventListener('scroll', place, true);
+    return () => {
+      window.removeEventListener('resize', place);
+      window.removeEventListener('scroll', place, true);
+    };
+  }, [open, items.length]);
+
   return (
-    <div className={cn('flex w-full flex-col gap-base', className)}>
+    <div className={cn('flex w-full flex-col gap-base', className)} ref={wrapRef}>
       {label ? <Label>{label}</Label> : null}
       {name ? <input type="hidden" name={name} value={value} /> : null}
-      <div className="relative" ref={ref}>
+      <div className="relative">
         <button
+          ref={buttonRef}
           type="button"
           aria-expanded={open}
           aria-haspopup="listbox"
@@ -84,38 +129,42 @@ export default function Select({
             )}
           />
         </button>
-        {open ? (
-          <div
-            id={menuId}
-            role="listbox"
-            className="absolute left-0 top-[calc(100%+8px)] z-50 w-max min-w-full overflow-hidden rounded-2xl border border-outline-variant/80 bg-surface-container-lowest p-xs shadow-[0_18px_50px_rgba(18,28,40,0.14)]"
-          >
-            {items.map((option) => {
-              const active = option.value === value;
-              return (
-                <button
-                  key={option.value || 'all'}
-                  type="button"
-                  role="option"
-                  aria-selected={active}
-                  className={cn(
-                    'flex w-full items-center justify-between gap-sm rounded-xl px-md py-sm text-left text-label transition-colors duration-150',
-                    active
-                      ? 'bg-primary-fixed font-semibold text-primary'
-                      : 'text-on-surface hover:bg-surface-container-low',
-                  )}
-                  onClick={() => {
-                    onChange?.(option.value);
-                    setOpen(false);
-                  }}
-                >
-                  {option.label}
-                  {active ? <Check size={16} strokeWidth={2.4} /> : null}
-                </button>
-              );
-            })}
-          </div>
-        ) : null}
+        {open
+          ? createPortal(
+              <div
+                ref={menuRef}
+                id={menuId}
+                role="listbox"
+                className="overflow-y-auto rounded-2xl border border-outline-variant/80 bg-surface-container-lowest p-xs shadow-lift animate-scale-in"
+              >
+                {items.map((option) => {
+                  const active = option.value === value;
+                  return (
+                    <button
+                      key={option.value || 'all'}
+                      type="button"
+                      role="option"
+                      aria-selected={active}
+                      className={cn(
+                        'flex w-full items-center justify-between gap-sm rounded-xl px-md py-sm text-left text-label transition-colors duration-150',
+                        active
+                          ? 'bg-primary-fixed font-semibold text-primary'
+                          : 'text-on-surface hover:bg-surface-container-low',
+                      )}
+                      onClick={() => {
+                        onChange?.(option.value);
+                        setOpen(false);
+                      }}
+                    >
+                      {option.label}
+                      {active ? <Check size={16} strokeWidth={2.4} /> : null}
+                    </button>
+                  );
+                })}
+              </div>,
+              document.body,
+            )
+          : null}
       </div>
       {error ? <Text tone="error">{error}</Text> : null}
     </div>

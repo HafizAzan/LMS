@@ -144,8 +144,8 @@ export default function CourseDetail() {
 
   return (
     <div className="space-y-xl">
-      <section className="grid gap-xl lg:grid-cols-[1.2fr_0.8fr]">
-        <div>
+      <section className="grid items-start gap-xl lg:grid-cols-[minmax(0,1.15fr)_minmax(0,0.85fr)]">
+        <div className="min-w-0">
           <Badge tone="primary">{course.category || 'Course'}</Badge>
           <Heading size="headline" className="mt-sm">
             {course.title}
@@ -178,11 +178,13 @@ export default function CourseDetail() {
           </div>
           {error ? <Text tone="error" className="mt-sm">{error}</Text> : null}
         </div>
-        {course.thumbnail ? (
-          <img src={course.thumbnail} alt="" className="h-64 w-full rounded-xl object-cover" />
-        ) : (
-          <div className="h-64 rounded-xl bg-surface-container" />
-        )}
+        <div className="aspect-video min-w-0 overflow-hidden rounded-2xl bg-surface-container shadow-soft">
+          {course.thumbnail ? (
+            <img src={course.thumbnail} alt="" className="h-full w-full object-cover" />
+          ) : (
+            <div className="h-full w-full bg-gradient-to-br from-primary-fixed to-surface-container" />
+          )}
+        </div>
       </section>
 
       <Tabs
@@ -200,9 +202,9 @@ export default function CourseDetail() {
           {(course.lessons || []).map((lesson, index) => (
             <li
               key={lesson._id}
-              className="flex items-center justify-between rounded-lg border border-outline-variant bg-surface-container-lowest px-md py-sm"
+              className="flex min-w-0 items-center justify-between gap-md rounded-xl border border-outline-variant/70 bg-surface-container-lowest px-md py-sm shadow-soft"
             >
-              <span>
+              <span className="min-w-0 truncate">
                 {index + 1}. {lesson.title}
               </span>
               {enrolled ? (

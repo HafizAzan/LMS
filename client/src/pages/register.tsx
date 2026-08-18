@@ -36,7 +36,7 @@ export default function Register() {
 
   return (
     <AuthScreen>
-      <form onSubmit={handleSubmit} className="w-full max-w-sm space-y-5">
+      <form onSubmit={handleSubmit} className="w-full space-y-5">
         <div className="space-y-sm">
           <Heading size="headline">Create your account</Heading>
           <Text muted>Join LearnHub as a student or instructor.</Text>

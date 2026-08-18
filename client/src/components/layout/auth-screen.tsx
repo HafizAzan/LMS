@@ -9,7 +9,9 @@ export default function AuthScreen({ children }: { children: ReactNode }) {
         <header className="absolute left-0 top-0 z-10 p-lg md:p-10">
           <Logo />
         </header>
-        <div className="flex flex-1 items-center justify-center px-md py-20">{children}</div>
+        <div className="flex flex-1 items-center justify-center px-md py-20">
+          <div className="page-enter w-full max-w-sm">{children}</div>
+        </div>
       </div>
       <AuthIllustration />
     </div>

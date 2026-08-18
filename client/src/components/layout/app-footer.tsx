@@ -46,7 +46,7 @@ export default function Footer() {
   return (
     <footer className="mt-auto shrink-0 border-t border-outline-variant bg-surface-container-lowest">
       <div className="mx-auto flex w-full max-w-7xl flex-col gap-xl px-md py-xxl md:px-xl">
-        <div className="grid gap-xl md:grid-cols-[1.2fr_1fr_1fr]">
+        <div className="grid gap-xl sm:grid-cols-2 lg:grid-cols-[1.2fr_1fr_1fr]">
           <div className="max-w-sm space-y-md">
             <Logo />
             <Text muted>

@@ -5,6 +5,7 @@ import CourseCard, { type Course } from '../components/course-card';
 import Heading from '../components/ui/heading';
 import Input from '../components/ui/input';
 import Select from '../components/ui/select';
+import { CourseCardSkeleton } from '../components/ui/skeleton';
 import Text from '../components/ui/text';
 import api from '../lib/api';
 import { getErrorMessage } from '../lib/cn';
@@ -46,14 +47,14 @@ export default function Catalog() {
 
   return (
     <div className="space-y-xl">
-      <div>
+      <div className="max-w-2xl">
         <Heading size="display">Explore Courses</Heading>
         <Text muted size="lg" className="mt-sm">
           Discover new skills and elevate your career.
         </Text>
       </div>
-      <div className="relative z-20 flex flex-col gap-sm rounded-2xl border border-outline-variant/80 bg-surface-container-lowest p-sm shadow-lift md:flex-row md:items-center">
-        <div className="min-w-0 flex-1">
+      <div className="relative z-20 grid grid-cols-1 gap-sm rounded-2xl border border-outline-variant/70 bg-surface-container-lowest p-sm shadow-soft sm:grid-cols-2 lg:grid-cols-[minmax(0,1fr)_200px_170px_200px]">
+        <div className="min-w-0 sm:col-span-2 lg:col-span-1">
           <Input
             placeholder="Search by title"
             defaultValue={search}
@@ -67,7 +68,7 @@ export default function Catalog() {
           />
         </div>
         <Select
-          className="md:w-[200px] md:shrink-0"
+          className="min-w-0"
           value={category}
           onChange={(value) => update('category', value)}
           placeholder="All categories"
@@ -79,7 +80,7 @@ export default function Catalog() {
           ]}
         />
         <Select
-          className="md:w-[180px] md:shrink-0"
+          className="min-w-0"
           value={difficulty}
           onChange={(value) => update('difficulty', value)}
           placeholder="All levels"
@@ -91,7 +92,7 @@ export default function Catalog() {
           ]}
         />
         <Select
-          className="md:w-[210px] md:shrink-0"
+          className="min-w-0"
           value={sort}
           onChange={(value) => update('sort', value)}
           icon={<ArrowUpDown size={16} />}
@@ -104,8 +105,14 @@ export default function Catalog() {
           ]}
         />
       </div>
-      {loading ? <Text muted>Loading courses...</Text> : null}
       {error ? <Text tone="error">{error}</Text> : null}
+      {loading ? (
+        <section className="course-grid">
+          {Array.from({ length: 6 }).map((_, index) => (
+            <CourseCardSkeleton key={index} />
+          ))}
+        </section>
+      ) : null}
       {!loading && !courses.length ? (
         <div className="flex flex-col items-center justify-center rounded-2xl border border-dashed border-outline-variant bg-surface-container-lowest px-xl py-xxl text-center">
           <div className="mb-md flex h-14 w-14 items-center justify-center rounded-2xl bg-primary-fixed text-primary">
@@ -119,11 +126,13 @@ export default function Catalog() {
           </Text>
         </div>
       ) : null}
-      <section className="grid grid-cols-1 gap-gutter sm:grid-cols-2 lg:grid-cols-3">
-        {courses.map((course) => (
-          <CourseCard key={course._id} course={course} />
-        ))}
-      </section>
+      {!loading && courses.length ? (
+        <section className="course-grid stagger-grid">
+          {courses.map((course) => (
+            <CourseCard key={course._id} course={course} />
+          ))}
+        </section>
+      ) : null}
     </div>
   );
 }

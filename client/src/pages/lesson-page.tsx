@@ -59,8 +59,8 @@ export default function LessonPage() {
   }
 
   return (
-    <div className="grid gap-lg lg:grid-cols-[1fr_280px]">
-      <section>
+    <div className="grid grid-cols-1 items-start gap-lg xl:grid-cols-[minmax(0,1fr)_320px]">
+      <section className="min-w-0">
         <Text muted size="caption" className="text-primary">
           {course.title}
         </Text>
@@ -68,15 +68,19 @@ export default function LessonPage() {
           {selected.title}
         </Heading>
         {selected.videoUrl ? (
-          <video
-            key={selected._id}
-            className="mt-lg w-full overflow-hidden rounded-xl bg-inverse-surface"
-            src={selected.videoUrl}
-            controls
-            onEnded={() => void markComplete()}
-          />
+          <div className="mt-lg overflow-hidden rounded-2xl bg-inverse-surface shadow-soft">
+            <video
+              key={selected._id}
+              className="aspect-video w-full bg-inverse-surface"
+              src={selected.videoUrl}
+              controls
+              onEnded={() => void markComplete()}
+            />
+          </div>
         ) : (
-          <Text className="mt-lg">This lesson does not have a video yet.</Text>
+          <div className="mt-lg flex aspect-video items-center justify-center rounded-2xl bg-surface-container">
+            <Text muted>This lesson does not have a video yet.</Text>
+          </div>
         )}
         <div className="mt-lg flex flex-wrap gap-sm">
           <Button variant="secondary" onClick={() => void markComplete()}>
@@ -90,7 +94,7 @@ export default function LessonPage() {
               <a
                 key={file.fileUrl}
                 href={file.fileUrl}
-                className="rounded-full bg-surface-container px-sm py-xs text-caption text-primary"
+                className="rounded-full bg-surface-container px-sm py-xs text-caption text-primary transition-colors hover:bg-primary-fixed"
               >
                 {file.name}
               </a>
@@ -98,11 +102,11 @@ export default function LessonPage() {
           </div>
         ) : null}
       </section>
-      <Card className="h-fit p-md">
-        <Heading as="h2" size="title" className="mb-sm">
+      <Card className="h-fit min-w-0 p-md xl:sticky xl:top-md">
+        <Heading as="h2" size="subtitle" className="mb-sm">
           Lessons
         </Heading>
-        <ul className="space-y-xs">
+        <ul className="max-h-[28rem] space-y-xs overflow-y-auto">
           {lessons.map((lesson) => {
             const active = lesson._id === selected._id;
             const done = completed.includes(lesson._id);
@@ -111,15 +115,22 @@ export default function LessonPage() {
                 <Link
                   to={`/courses/${courseId}/learn/${lesson._id}`}
                   className={cn(
-                    'flex items-center justify-between rounded-lg px-sm py-sm text-sm',
+                    'flex items-center justify-between rounded-xl px-sm py-sm text-sm transition-colors duration-200',
                     active
-                      ? 'bg-surface-container-low font-semibold text-primary'
+                      ? 'bg-primary/10 font-semibold text-primary'
                       : 'text-on-surface-variant hover:bg-surface-container',
                   )}
                 >
-                  <span className="flex items-center gap-xs">
-                    {done ? <Check size={14} /> : <Play size={14} />}
-                    {lesson.title}
+                  <span className="flex min-w-0 items-center gap-sm">
+                    <span
+                      className={cn(
+                        'flex h-7 w-7 shrink-0 items-center justify-center rounded-full',
+                        done ? 'bg-primary text-on-primary' : 'bg-surface-container text-on-surface-variant',
+                      )}
+                    >
+                      {done ? <Check size={14} /> : <Play size={14} />}
+                    </span>
+                    <span className="truncate">{lesson.title}</span>
                   </span>
                 </Link>
               </li>

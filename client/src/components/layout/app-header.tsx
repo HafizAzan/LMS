@@ -25,8 +25,8 @@ export default function Header({ onMenu }: HeaderProps) {
   };
 
   return (
-    <header className="sticky top-0 z-40 shrink-0 border-b border-outline-variant bg-surface-container-lowest px-md py-md md:px-xl">
-      <div className="flex min-h-12 items-center justify-between gap-md">
+    <header className="z-40 shrink-0 border-b border-outline-variant/60 bg-surface-container-lowest/80 backdrop-blur-xl">
+      <div className="mx-auto flex min-h-[4.25rem] w-full max-w-7xl items-center justify-between gap-md px-md md:px-xl">
         <div className="flex min-w-0 flex-1 items-center gap-md">
           <IconButton label="Open menu" className="lg:hidden" onClick={onMenu}>
             <Menu size={20} />
@@ -34,7 +34,7 @@ export default function Header({ onMenu }: HeaderProps) {
           <div className="lg:hidden">
             <Logo />
           </div>
-          <form onSubmit={handleSearch} className="hidden max-w-md flex-1 md:block">
+          <form onSubmit={handleSearch} className="hidden min-w-0 max-w-md flex-1 md:block">
             <Input
               value={query}
               onChange={(event) => setQuery(event.target.value)}
@@ -46,7 +46,7 @@ export default function Header({ onMenu }: HeaderProps) {
             />
           </form>
         </div>
-        <div className="flex items-center gap-sm">
+        <div className="flex shrink-0 items-center gap-sm">
           {isAuthenticated ? (
             <>
               <NotificationMenu />

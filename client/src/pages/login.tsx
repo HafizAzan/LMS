@@ -41,7 +41,7 @@ export default function Login() {
 
   return (
     <AuthScreen>
-      <form onSubmit={handleSubmit} className="w-full max-w-sm space-y-5">
+      <form onSubmit={handleSubmit} className="w-full space-y-5">
         <div className="space-y-sm">
           <Heading size="headline">Welcome back</Heading>
           <Text muted>Log in to continue your learning journey.</Text>

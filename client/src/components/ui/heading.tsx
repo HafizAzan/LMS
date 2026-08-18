@@ -3,14 +3,15 @@ import { cn } from '../../lib/cn';
 
 type HeadingProps = HTMLAttributes<HTMLHeadingElement> & {
   as?: 'h1' | 'h2' | 'h3';
-  size?: 'display' | 'headline' | 'title';
+  size?: 'display' | 'headline' | 'title' | 'subtitle';
   children: ReactNode;
 };
 
 const sizes = {
-  display: 'text-display',
-  headline: 'text-headline',
-  title: 'text-title',
+  display: 'text-[2rem] leading-tight md:text-display',
+  headline: 'text-[1.75rem] leading-tight md:text-headline',
+  title: 'text-xl leading-snug md:text-title',
+  subtitle: 'text-lg font-semibold leading-snug',
 } as const;
 
 export default function Heading({

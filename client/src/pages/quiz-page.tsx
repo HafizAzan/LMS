@@ -95,7 +95,7 @@ export default function QuizPage() {
             </li>
           ))}
         </ul>
-        <div className="mt-lg flex justify-center gap-sm">
+        <div className="mt-lg flex flex-wrap justify-center gap-sm">
           <Button
             onClick={() => {
               setResult(null);
@@ -141,7 +141,7 @@ export default function QuizPage() {
                   key={option}
                   type="button"
                   variant={answers[index] === option ? 'primary' : 'secondary'}
-                  className="mr-sm capitalize"
+                  className="w-full capitalize sm:w-auto"
                   onClick={() => setAnswers((prev) => prev.map((value, i) => (i === index ? option : value)))}
                 >
                   {option}

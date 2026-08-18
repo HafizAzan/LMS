@@ -9,6 +9,7 @@ export { default as Label } from './label';
 export { default as Text } from './text';
 export { default as Heading } from './heading';
 export { default as Card } from './card';
+export { default as Skeleton, CourseCardSkeleton } from './skeleton';
 export { default as Badge } from './badge';
 export { default as Avatar } from './avatar';
 export { default as ProgressBar } from './progress-bar';

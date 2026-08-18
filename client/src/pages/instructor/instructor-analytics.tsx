@@ -42,7 +42,7 @@ export default function InstructorAnalytics() {
         options={courses.map((course) => ({ value: course._id, label: course.title }))}
       />
       {data ? (
-        <div className="grid gap-gutter md:grid-cols-4">
+        <div className="grid grid-cols-1 gap-gutter stagger-grid sm:grid-cols-2 xl:grid-cols-4">
           <Card>
             <Heading size="headline">{data.totalEnrolled}</Heading>
             <Text muted>Enrolled</Text>

@@ -16,6 +16,6 @@ export default function Card({
   ...props
 }: CardProps) {
   return (
-    <Tag className={cn('card', padding && 'p-lg', hover && 'card-hover', className)} {...props} />
+    <Tag className={cn('card min-w-0', padding && 'p-lg', hover && 'card-hover', className)} {...props} />
   );
 }

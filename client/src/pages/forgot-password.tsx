@@ -30,7 +30,7 @@ export default function ForgotPassword() {
 
   return (
     <AuthScreen>
-      <form onSubmit={handleSubmit} className="w-full max-w-sm space-y-5">
+      <form onSubmit={handleSubmit} className="w-full space-y-5">
         <div className="space-y-sm">
           <Heading size="headline">Forgot password</Heading>
           <Text muted>Enter your email and we will send a 1-minute reset code.</Text>

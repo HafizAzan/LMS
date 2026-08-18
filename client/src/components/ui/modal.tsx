@@ -1,4 +1,5 @@
 import { useEffect, type ReactNode } from 'react';
+import { createPortal } from 'react-dom';
 import { X } from 'lucide-react';
 import { cn } from '../../lib/cn';
 import Heading from './heading';
@@ -34,18 +35,19 @@ export default function Modal({
     const onKey = (event: KeyboardEvent) => {
       if (event.key === 'Escape') onClose();
     };
+    const previousOverflow = document.body.style.overflow;
     document.body.style.overflow = 'hidden';
     document.addEventListener('keydown', onKey);
     return () => {
-      document.body.style.overflow = '';
+      document.body.style.overflow = previousOverflow;
       document.removeEventListener('keydown', onKey);
     };
   }, [open, onClose]);
 
   if (!open) return null;
 
-  return (
-    <div className="fixed inset-0 z-[60] flex items-center justify-center p-md">
+  return createPortal(
+    <div className="fixed inset-0 z-[80] flex items-center justify-center p-md">
       <button
         type="button"
         className="absolute inset-0 bg-[#121c28]/45 backdrop-blur-[6px]"
@@ -57,7 +59,7 @@ export default function Modal({
         aria-modal="true"
         aria-labelledby="modal-title"
         className={cn(
-          'relative z-10 w-full overflow-hidden rounded-2xl border border-white/70 bg-surface-container-lowest shadow-[0_24px_80px_rgba(18,28,40,0.22)]',
+          'relative z-10 max-h-[calc(100dvh-2rem)] w-full overflow-y-auto rounded-2xl border border-white/70 bg-surface-container-lowest shadow-lift animate-scale-in',
           sizes[size],
         )}
       >
@@ -85,6 +87,7 @@ export default function Modal({
           </div>
         ) : null}
       </div>
-    </div>
+    </div>,
+    document.body,
   );
 }

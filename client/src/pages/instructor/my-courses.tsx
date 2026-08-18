@@ -38,7 +38,7 @@ export default function MyCourses() {
 
   return (
     <div className="space-y-lg">
-      <div className="flex items-center justify-between">
+      <div className="flex flex-wrap items-center justify-between gap-md">
         <Heading size="headline">My Courses</Heading>
         <Button to="/instructor/courses/new">Create course</Button>
       </div>
